@@ -7,7 +7,7 @@ type DisplayProps = {
 export default function Display({ data }: DisplayProps) {
   if (!data) {
     return (
-      <div className="p-6 text-center text-gray-500">
+      <div className="flex items-center justify-center h-48 text-sm text-gray-400">
         No ranked data available
       </div>
     );
@@ -27,83 +27,82 @@ export default function Display({ data }: DisplayProps) {
   } = data.at(0);
 
   const totalGames = wins + losses;
-  const winRate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
+  const winRate = totalGames ? Math.round((wins / totalGames) * 100) : 0;
 
-  // Map tier to color
-  const tierColors: Record<string, string> = {
-    IRON: "bg-gray-400 text-white",
-    BRONZE: "bg-orange-500 text-white",
-    SILVER: "bg-gray-300 text-black",
-    GOLD: "bg-yellow-400 text-black",
-    PLATINUM: "bg-teal-400 text-white",
-    DIAMOND: "bg-blue-500 text-white",
-    MASTER: "bg-purple-600 text-white",
-    GRANDMASTER: "bg-red-600 text-white",
-    CHALLENGER: "bg-pink-600 text-white",
+  const tierGradients: Record<string, string> = {
+    IRON: "from-gray-500 to-gray-700",
+    BRONZE: "from-orange-400 to-orange-700",
+    SILVER: "from-gray-200 to-gray-400",
+    GOLD: "from-yellow-300 to-yellow-500",
+    PLATINUM: "from-teal-300 to-teal-600",
+    DIAMOND: "from-blue-400 to-indigo-600",
+    MASTER: "from-purple-500 to-purple-800",
+    GRANDMASTER: "from-red-500 to-red-800",
+    CHALLENGER: "from-pink-500 to-fuchsia-700",
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-xl rounded-xl border border-gray-200">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold tracking-wide">
-          {queueType?.replaceAll("_", " ")}
-        </h1>
-        <span
-          className={`px-3 py-1 rounded-full text-sm font-semibold ${tierColors[tier]}`}
-        >
-          {tier} {rank}
-        </span>
+    <div className="relative max-w-md mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 text-white shadow-2xl">
+      {/* Tier Banner */}
+      <div
+        className={`p-6 bg-gradient-to-r ${tierGradients[tier]} flex justify-between items-center`}
+      >
+        <div>
+          <p className="text-xs uppercase tracking-widest opacity-80">
+            {queueType?.replaceAll("_", " ")}
+          </p>
+          <h1 className="text-2xl font-extrabold">
+            {tier} {rank}
+          </h1>
+        </div>
+
+        <div className="text-right">
+          <p className="text-sm opacity-80">LP</p>
+          <p className="text-3xl font-black">{leaguePoints}</p>
+        </div>
       </div>
 
-      <p className="text-gray-600 mb-4 font-medium">{leaguePoints} LP</p>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      {/* Stats */}
+      <div className="p-6 grid grid-cols-3 gap-4 text-center">
         <Stat label="Wins" value={wins} />
         <Stat label="Losses" value={losses} />
-        <Stat label="Win Rate" value={`${winRate}%`} />
-        <Stat label="Games" value={totalGames} />
+        <Stat label="Win Rate" value={`${winRate}%`} highlight />
       </div>
 
-      {/* Status Badges */}
-      <div className="flex flex-wrap gap-2">
-        {hotStreak && <Badge color="red" text="🔥 Hot Streak" />}
-        {veteran && <Badge color="purple" text="🎖 Veteran" />}
-        {freshBlood && <Badge color="green" text="🆕 Fresh Blood" />}
-        {inactive && <Badge color="gray" text="⏸ Inactive" />}
+      {/* Footer */}
+      <div className="px-6 pb-6 flex items-center justify-between text-xs text-zinc-300">
+        <span>{totalGames} Games Played</span>
+
+        <div className="flex gap-2 text-lg">
+          {hotStreak && <span title="Hot Streak">🔥</span>}
+          {veteran && <span title="Veteran">🎖️</span>}
+          {freshBlood && <span title="Fresh Blood">🆕</span>}
+          {inactive && <span title="Inactive">⏸️</span>}
+        </div>
       </div>
     </div>
   );
 }
 
-// Reusable stat component
-function Stat({ label, value }: { label: string; value: string | number }) {
-  const displayValue =
-    typeof value === "number" && Number.isNaN(value) ? "—" : value;
-
+function Stat({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string | number;
+  highlight?: boolean;
+}) {
   return (
-    <div className="p-3 bg-gray-50 rounded-lg text-center shadow-sm">
-      <div className="text-gray-500 text-sm">{label}</div>
-      <div className="text-lg font-bold">{displayValue}</div>
-    </div>
-  );
-}
-
-// Reusable badge component
-function Badge({ text, color }: { text: string; color: string }) {
-  const colorClasses: Record<string, string> = {
-    red: "bg-red-200 text-red-800",
-    green: "bg-green-200 text-green-800",
-    purple: "bg-purple-200 text-purple-800",
-    gray: "bg-gray-200 text-gray-800",
-  };
-
-  return (
-    <span
-      className={`px-2 py-1 rounded-full text-sm font-medium ${colorClasses[color]}`}
+    <div
+      className={`rounded-xl p-4 ${
+        highlight ? "bg-white/10 backdrop-blur font-bold" : "bg-black/20"
+      }`}
     >
-      {text}
-    </span>
+      <div className="text-xs uppercase tracking-wider text-zinc-400">
+        {label}
+      </div>
+      <div className="text-2xl font-extrabold">{value}</div>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import Display from "@/app/_components/Display";
 import Loading from "@/app/_components/Loading";
+import ChampMastery from "@/app/_components/ChampMastery";
 import { Suspense } from "react";
 
 type PageProps = {
@@ -18,10 +19,20 @@ export default async function page({ params }: PageProps) {
   const data = await res.json();
   console.log(data);
 
+  const response = await fetch(
+    `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${process.env.API_KEY}`
+  );
+  const championMasteryData = await response.json();
+
+  console.log(championMasteryData);
+
   return (
     <>
       <Suspense fallback={<Loading />}>
         <Display data={data} />
+      </Suspense>
+      <Suspense fallback={<Loading />}>
+        <ChampMastery mastery={championMasteryData} />
       </Suspense>
     </>
   );
