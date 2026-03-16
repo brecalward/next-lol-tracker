@@ -1,24 +1,26 @@
 import { Mastery } from "../_types/Mastery";
 
+function ChampionCard({ champ }: any) {
+  return <div>Champion ID: {champ.championId}</div>;
+}
+
 type DisplayProps = {
   mastery?: Mastery;
+  champInfo: any;
 };
 
-export default function ChampionMastery({ mastery }: DisplayProps) {
+export default function ChampionMastery({ mastery, champInfo }: DisplayProps) {
   console.log(mastery);
   console.log(typeof mastery);
   for (const champ in mastery) {
     console.log(mastery[champ].championId);
   }
+  console.log(champInfo);
   return (
-    <div>
-      {/* <p>Champion ID: {championId}</p>
-      <p>Level: {championLevel}</p>
-      <p>Points: {championPoints}</p>
-      <p>Tokens: {tokensEarned}</p>
-      <p>Reward Marks: {rewardMarks}</p>
-      <p>Bonus: {bonus ? "Yes" : "No"}</p>
-      <p>Total Games Required: {totalGamesRequires}</p> */}
+    <div className="m-y-10">
+      {mastery?.map((champ: any) => (
+        <ChampionCard champ={champ} />
+      ))}
     </div>
   );
 }
