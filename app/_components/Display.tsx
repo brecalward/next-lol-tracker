@@ -31,7 +31,7 @@ export default function Display({ data }: DisplayProps) {
 
   const tierGradients: Record<string, string> = {
     IRON: "from-gray-500 to-gray-700",
-    BRONZE: "from-orange-400 to-orange-700",
+    BRONZE: "from-taupe-400 to-taupe-700",
     SILVER: "from-gray-200 to-gray-400",
     GOLD: "from-yellow-300 to-yellow-500",
     PLATINUM: "from-teal-300 to-teal-600",
@@ -42,7 +42,7 @@ export default function Display({ data }: DisplayProps) {
   };
 
   return (
-    <div className="relative max-w-md mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 text-white shadow-2xl">
+    <div className="relative max-w-md mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 text-white shadow-2xl mt-10">
       {/* Tier Banner */}
       <div
         className={`p-6 bg-gradient-to-r ${tierGradients[tier]} flex justify-between items-center`}
